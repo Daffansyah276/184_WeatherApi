@@ -31,3 +31,20 @@ app.get("/api/lokasi", async (req, res) => {
                 });
             }
             if (kecamatan === "-") kecamatan = feature.text;
+
+            res.json({
+                negara: negara,
+                provinsi: provinsi,
+                kecamatan: kecamatan,
+                longitude: koordinat[0].toFixed(6),
+                latitude: koordinat[1].toFixed(6)
+            });
+        } else {
+            res.status(404).json({ message: "Lokasi tidak ditemukan" });
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: "Gagal mengambil data dari MapTiler" });
+    }
+});
+
