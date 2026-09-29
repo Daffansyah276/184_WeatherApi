@@ -17,3 +17,17 @@ app.get("/api/lokasi", async (req, res) => {
     try {
         const response = await axios.get(url);
         const data = response.data;
+
+        if (data.features && data.features.length > 0) {
+            const feature = data.features[0];
+            const koordinat = feature.geometry.coordinates; 
+
+            let negara = "-", provinsi = "-", kecamatan = "-";
+            if(feature.context) {
+                feature.context.forEach(ctx => {
+                    if (ctx.id.startsWith('country')) negara = ctx.text;
+                    if (ctx.id.startsWith('region') || ctx.id.startsWith('province')) provinsi = ctx.text;
+                    if (ctx.id.startsWith('county') || ctx.id.startsWith('municipality') || ctx.id.startsWith('city')) kecamatan = ctx.text;
+                });
+            }
+            if (kecamatan === "-") kecamatan = feature.text;
