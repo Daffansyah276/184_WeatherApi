@@ -715,3 +715,143 @@
          JAVASCRIPT
     ============================================= -->
 
+    <script>
+
+        function cariLokasi() {
+
+            const kota =
+                document
+                .getElementById("inputKota")
+                .value
+                .trim();
+
+
+            /* ==============================
+               VALIDASI INPUT
+            ============================== */
+
+            if (!kota) {
+
+                alert(
+                    "⚠ HARAP MASUKKAN NAMA LOKASI!"
+                );
+
+                return;
+            }
+
+
+            /* ==============================
+               REQUEST API
+            ============================== */
+
+            fetch(
+                `/api/lokasi?kota=${encodeURIComponent(kota)}`
+            )
+
+            .then(response => {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server API bermasalah"
+                    );
+                }
+
+                return response.json();
+            })
+
+
+            .then(data => {
+
+
+                /* ==============================
+                   CHECK MESSAGE
+                ============================== */
+
+                if (data.message) {
+
+                    alert(data.message);
+
+                    return;
+                }
+
+
+                /* ==============================
+                   UPDATE DATA
+                ============================== */
+
+                document
+                    .getElementById("negara")
+                    .innerHTML =
+                    data.negara;
+
+
+                document
+                    .getElementById("provinsi")
+                    .innerHTML =
+                    data.provinsi;
+
+
+                document
+                    .getElementById("kecamatan")
+                    .innerHTML =
+                    data.kecamatan;
+
+
+                document
+                    .getElementById("lon")
+                    .innerHTML =
+                    data.longitude;
+
+
+                document
+                    .getElementById("lat")
+                    .innerHTML =
+                    data.latitude;
+
+            })
+
+
+            /* ==============================
+               ERROR HANDLING
+            ============================== */
+
+            .catch(error => {
+
+                console.error(
+                    "Error:",
+                    error
+                );
+
+                alert(
+                    "⚠ GAGAL MENGAMBIL DATA LOKASI!"
+                );
+
+            });
+
+        }
+
+
+        /* ============================================
+           ENTER KEY
+        ============================================= */
+
+        document
+            .getElementById("inputKota")
+            .addEventListener(
+                "keypress",
+                function(event) {
+
+                    if (event.key === "Enter") {
+
+                        cariLokasi();
+
+                    }
+
+                }
+            );
+
+    </script>
+
+
+</body>
